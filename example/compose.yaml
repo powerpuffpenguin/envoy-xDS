@@ -1,0 +1,16 @@
+networks:
+  ingress_intranet: 
+    external: true
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.35-latest
+    ports:
+      - 2052:80
+      - 2053:443/tcp
+      - 2053:443/udp
+    restart: always
+    volumes:
+      - ./etc/envoy:/etc/envoy:ro
+    networks:
+      ingress_intranet:
+        ipv4_address: 10.89.19.64
