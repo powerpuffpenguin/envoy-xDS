@@ -108,3 +108,6 @@ Or execute the -t/--test command to print the generated xDS:
 ```
 deno run -A envoy.ts -t
 ```
+
+> When importing envoy-xDS/1.35/mod.ts , please switch the version number to the
+> one compatible with the envoy you are using.
