@@ -43,3 +43,68 @@ listener.yaml, route.yaml, etc.) and save them to a specified directory.
 Envoy Hot Reload: Your Envoy proxy is configured to watch this directory. As
 soon as the new configuration files appear, Envoy automatically detects the
 change and loads the new settings without a restart.
+
+# Example
+
+Below is an envoy environment deployed using docker compose:
+
+```
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.35-latest
+    ports:
+      - 80:80
+      - 443:443/tcp
+      - 443:443/udp
+    restart: always
+    volumes:
+      - ./etc/envoy:/etc/envoy:ro
+```
+
+You can create an envoy.ts file and write the following code to create an xDS
+files
+
+```
+import { Cluster, Envoy, run } from 'https://raw.githubusercontent.com/powerpuffpenguin/envoy-xDS/1.35/mod.ts'
+const scriptUrl = import.meta.url
+const dir = scriptUrl.substring(7, scriptUrl.lastIndexOf('/'))
+
+// Defining xDS project
+const envoy = new Envoy({
+    dir: `${dir}/etc/envoy`, // The directory where envoy xDS files are stored on the host machine
+    watch: '/etc/envoy', // Mount the xDS directory in the Docker container
+}).cds(
+    // Defining upstream
+    new Cluster({
+        name: 'bing',
+        addr: 'bing.com:443',
+        protocol: 'auto',
+        type: 'STRICT_DNS',
+    }),
+    new Cluster({
+        name: 'google',
+        addr: 'google.com:443',
+        protocol: 'auto',
+        type: 'STRICT_DNS',
+    }),
+).sds(
+    // Defining tls certificates
+).lds(
+    // Defining Listeners
+)
+
+// run cli
+run(Deno.args, envoy)
+```
+
+Then you can execute the -b/--build command to update xDS:
+
+```
+deno run -A envoy.ts -b
+```
+
+Or execute the -t/--test command to print the generated xDS:
+
+```
+deno run -A envoy.ts -t
+```
