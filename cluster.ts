@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { splitHostPort } from "./ip.ts";
-import type { DS } from "./provider.ts";
+import type { NameDS } from "./provider.ts";
 
 export interface ClusterOptions {
     /**
@@ -60,8 +60,9 @@ export interface ClusterOptions {
 }
 /**
  * Upstream cluster
+ * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster}
  */
-export class Cluster implements DS {
+export class Cluster implements NameDS {
     private readonly opts: ClusterOptions
     private readonly init: Record<string, any>
     private readonly overlay: Record<string, any>

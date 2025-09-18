@@ -35,7 +35,7 @@ export interface Provider {
  * define xDS
  */
 export interface DS {
-    toJSON(): Record<string, any>
+    toJSON(): Record<string, any> | Promise<Record<string, any>>
 }
 export interface NameDS extends DS {
     readonly name: string

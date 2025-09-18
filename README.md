@@ -56,8 +56,10 @@ services:
       - 80:80
       - 443:443/tcp
       - 443:443/udp
-    restart: always
+    restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - ./etc/envoy:/etc/envoy:ro
 ```
 

@@ -1,4 +1,4 @@
-import { Cluster, Envoy, run } from '../mod.ts'
+import { Envoy, run } from '../mod.ts'
 const scriptUrl = import.meta.url
 const dir = scriptUrl.substring(7, scriptUrl.lastIndexOf('/'))
 
@@ -6,24 +6,39 @@ const dir = scriptUrl.substring(7, scriptUrl.lastIndexOf('/'))
 const envoy = new Envoy({
     dir: `${dir}/etc/envoy`, // The directory where envoy xDS files are stored on the host machine
     watch: '/etc/envoy', // Mount the xDS directory in the Docker container
-}).cds(
+}).createClusters(
     // Defining upstream
-    new Cluster({
+    {
         name: 'bing',
         addr: 'bing.com:443',
         protocol: 'auto',
         type: 'STRICT_DNS',
-    }),
-    new Cluster({
+    },
+    {
         name: 'google',
         addr: 'google.com:443',
         protocol: 'auto',
         type: 'STRICT_DNS',
-    }),
-).sds(
+    },
+    // ...
+).createCertificates(
     // Defining tls certificates
-).lds(
+    {
+        name: 'abc',
+        cert: 'fullchain.pem',
+        key: 'privkey.pem',
+    },
+    // ...
+).createListeners(
     // Defining Listeners
+    {
+        name: 'http',
+        addr: ':80',
+    },
+    {
+        name: 'https',
+        addr: ':443',
+    },
 )
 
 // run cli

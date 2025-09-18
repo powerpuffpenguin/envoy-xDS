@@ -1,4 +1,6 @@
 export * from "./ip.ts"
 export * from "./envoy.ts"
 export * from "./cluster.ts"
+export * from "./certificate.ts"
+export * from "./listener.ts"
 export * from "./run.ts"
