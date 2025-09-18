@@ -19,7 +19,7 @@ export interface FilterChainOptions {
      */
     serverNames?: string[]
     /**
-     * @defaultValue ["h2", "http/1.1"]
+     * @defaultValue ["h2", "http/1.1"] or ["h3"]
      */
     alpn?: string[]
 
@@ -67,8 +67,6 @@ export class FilterChain implements NameDS {
             transportType = "type.googleapis.com/envoy.extensions.transport_sockets.quic.v3.QuicDownstreamTransport"
             alpn = opts.alpn ?? [
                 "h3",
-                "h2",
-                "http/1.1"
             ]
         } else {
             transportName = "envoy.transport_sockets.tls"
