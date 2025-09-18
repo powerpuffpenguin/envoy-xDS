@@ -17,7 +17,7 @@ export interface ListenerOptions {
      * socket type
      * @defaultValue 'tcp' 
      */
-    network?: 'tcp' | 'unix'
+    network?: 'tcp' | 'unix' | 'udp'
 
     /**
      * Specifying routes for http.
@@ -55,6 +55,11 @@ export class Listener implements NameDS {
         }
         const network = opts.network ?? 'tcp'
         switch (network) {
+            case 'udp':
+                if (!opts.https) {
+                    throw new Error(`udp must specify the https attribute`)
+                }
+                break
             case 'tcp':
             case 'unix':
                 break
@@ -70,6 +75,9 @@ export class Listener implements NameDS {
     async toJSON() {
         const opts = this.opts
         const router: Record<string, any> = {}
+        if (opts.network == 'udp') {
+            return this._quic()
+        }
         if (opts.https) {
             router['filter_chains'] = await this._filter_chains()
             router['listener_filters'] = [
@@ -89,6 +97,28 @@ export class Listener implements NameDS {
             name: 'lds_' + opts.name,
             address: this._address(),
             ...router,
+            ...this.overlay,
+        }
+    }
+    private async _quic() {
+        const opts = this.opts
+        const [host, port] = splitHostPort(opts.addr)
+        return {
+            ...this.init,
+            '@type': "type.googleapis.com/envoy.config.listener.v3.Listener",
+            name: 'lds_' + opts.name,
+            address: {
+                socket_address: {
+                    protocol: 'UDP',
+                    address: host === '' ? '::' : host,
+                    ipv4_compat: host === '' || host.indexOf(':') >= 0 ? true : undefined,
+                    port_value: port,
+                },
+            },
+            udp_listener_config: {
+                quic_options: {},
+            },
+            "filter_chains": await this._filter_chains(),
             ...this.overlay,
         }
     }
