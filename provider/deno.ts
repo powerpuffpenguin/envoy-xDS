@@ -64,6 +64,6 @@ export class DenoProvider implements Provider {
      * Generate yaml for xDS
      */
     toYaml(value: any): string {
-        return dump(value)
+        return dump(JSON.parse(JSON.stringify(value)))
     }
 }

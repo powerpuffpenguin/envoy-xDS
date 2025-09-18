@@ -92,7 +92,8 @@ export class Listener implements NameDS {
         }
     }
     private async _default_filter_chain() {
-        const route = this.opts.http
+        const opts = this.opts
+        const route = opts.http
         return {
             "filters": [
                 {
@@ -115,7 +116,7 @@ export class Listener implements NameDS {
                             }
                         ],
                         "route_config": route ? await route.toJSON() : undefined,
-                        "stat_prefix": route ? 'route_' + route.name : undefined,
+                        "stat_prefix": opts.name,
                         "strip_any_host_port": true
                     }
                 }

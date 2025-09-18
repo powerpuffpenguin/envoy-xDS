@@ -40,3 +40,9 @@ export interface DS {
 export interface NameDS extends DS {
     readonly name: string
 }
+export class RawDS implements DS {
+    constructor(private readonly json: Record<string, any>) { }
+    toJSON() {
+        return this.json
+    }
+}

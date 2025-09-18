@@ -1,6 +1,24 @@
-import { Envoy, run } from '../mod.ts'
+import { Envoy, run, Router } from '../mod.ts'
 const scriptUrl = import.meta.url
 const dir = scriptUrl.substring(7, scriptUrl.lastIndexOf('/'))
+
+
+const router = new Router({
+    name: 'demo',
+    hosts: [
+        {
+            name: 'search',
+            routes: [
+                {
+                    path: '/',
+                    response: 'bing',
+                    websocket: 'both',
+                },
+            ],
+        },
+    ],
+})
+
 
 // Defining xDS project
 const envoy = new Envoy({
@@ -34,10 +52,12 @@ const envoy = new Envoy({
     {
         name: 'http',
         addr: ':80',
+        http: router.clone('http_' + router.name),
     },
     {
         name: 'https',
         addr: ':443',
+        http: router.clone('https_' + router.name),
     },
 )
 
