@@ -223,13 +223,15 @@ export class Router implements NameDS {
             }
         }
         const websocket = opts.websocket ?? 'no'
-        switch (opts.websocket) {
+        switch (websocket) {
             case 'yes':
                 return this._routeWebsocket(opts, match, true)
             case 'no':
                 return this._routeWebsocket(opts, match, false)
             case 'both':
-                return [this._routeWebsocket(opts, match, true), this._routeWebsocket(opts, match, false)]
+                return [
+                    this._routeWebsocket(opts, match, true),
+                    this._routeWebsocket(opts, this._match(opts), false),]
             default:
                 throw new Error(`route unknow websocket options: ${websocket}`)
         }

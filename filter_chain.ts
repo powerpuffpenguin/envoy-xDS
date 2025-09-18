@@ -2,11 +2,29 @@
 import type { NameDS } from "./provider.ts";
 
 export interface FilterChainOptions {
+    /**
+     * filter chain name
+     */
     name: string
+    /**
+     * tls sds name
+     */
     tls: string
+    /**
+     * sds path
+     */
     dir: string
+    /**
+     * matched sni
+     */
     serverNames?: string[]
+    /**
+     * @defaultValue ["h2", "http/1.1"]
+     */
     alpn?: string[]
+    /**
+     * router rules
+     */
     router?: NameDS
     /**
      * default xDS

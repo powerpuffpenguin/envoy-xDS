@@ -258,3 +258,19 @@ export class Envoy {
         return this
     }
 }
+let single: Envoy | undefined
+/**
+ * Returns the global singleton
+ */
+export function getEnvoy(opts?: EnvoyOptions): Envoy {
+    if (opts) {
+        if (!single) {
+            single = new Envoy(opts)
+            return single
+        }
+    }
+    if (!single) {
+        throw new Error('single envoy not init')
+    }
+    return single
+}

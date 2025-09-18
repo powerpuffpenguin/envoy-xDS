@@ -82,13 +82,13 @@ export class Cluster implements NameDS {
             throw new Error('cluster name invalid')
         }
         const clusterType = opts.type ?? 'STATIC'
-        switch (opts.type) {
+        switch (clusterType) {
             case 'STATIC':
             case 'STRICT_DNS':
             case 'LOGICAL_DNS':
                 break
             default:
-                throw new Error(`cluster unknow type: ${opts.type}`)
+                throw new Error(`cluster unknow type: ${clusterType}`)
         }
         const lb_endpoints = Array.isArray(opts.addr) ?
             opts.addr.map((v) => this._endpoint(v)) :
@@ -106,7 +106,7 @@ export class Cluster implements NameDS {
                     }
                 ]
             },
-            "name": "cds_" + opts.name,
+            "name": opts.name,
             "type": clusterType,
             ...this.overlay,
         }

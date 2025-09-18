@@ -29,6 +29,7 @@ export interface ListenerOptions {
      * When both http and https are specified, http will be ignored.
      */
     https?: NameDS[],
+
     /**
      * default xDS
      */
@@ -149,6 +150,7 @@ export class Listener implements NameDS {
         return {
             socket_address: {
                 address: host === '' ? '::' : host,
+                ipv4_compat: host === '' || host.indexOf(':') >= 0 ? true : undefined,
                 port_value: port,
             }
         }
