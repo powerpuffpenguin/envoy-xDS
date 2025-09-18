@@ -12,7 +12,7 @@ const envoy = new Envoy({
     {
         name: 'bing',
         addr: 'bing.com:443',
-        protocol: 'auto', // alpn
+        protocol: 'https',
         type: 'STRICT_DNS',
         overlay: {
             lb_policy: 'ROUND_ROBIN',
@@ -22,7 +22,7 @@ const envoy = new Envoy({
     {
         name: 'google',
         addr: 'google.com:443',
-        protocol: 'https', // h2 connect
+        protocol: 'auto',
         type: 'STRICT_DNS',
         overlay: {
             lb_policy: 'ROUND_ROBIN',
