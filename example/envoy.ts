@@ -1,4 +1,4 @@
-import { Envoy, run, Router } from '../mod.ts'
+import { Envoy, run, Router, FilterChain } from '../mod.ts'
 const scriptUrl = import.meta.url
 const dir = scriptUrl.substring(7, scriptUrl.lastIndexOf('/'))
 
@@ -57,7 +57,14 @@ const envoy = new Envoy({
     {
         name: 'https',
         addr: ':443',
-        http: router.clone('https_' + router.name),
+        https: [
+            new FilterChain({
+                name: 'demo',
+                tls: 'abc',
+                dir: '/etc/envoy',
+                router: router.clone('https_' + router.name),
+            })
+        ],
     },
 )
 
