@@ -165,7 +165,7 @@ export class Router implements NameDS {
             virtual_hosts: opts?.hosts?.map((v) => {
                 return {
                     name: ['host', opts.name, v.name].join('_'),
-                    domains: v.domains,
+                    domains: v.domains ?? ['*'],
                     routes: v.routes?.flatMap((v) => this._route(v)) ?? [],
                 }
             }),
