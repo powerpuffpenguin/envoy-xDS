@@ -3,6 +3,8 @@
 Use typescript to simplify the use of envoy xDS
 
 - [Overview](#Overview)
+- [Example](#Example)
+- [Init](#Init)
 
 # Overview
 
@@ -200,3 +202,14 @@ deno run -A envoy.ts -t
 
 > When importing envoy-xDS/1.35/mod.ts , please switch the version number to the
 > one compatible with the envoy you are using.
+
+# Init
+
+You can enter the following command to initialize the deno environment required
+by xDS in the current folder:
+
+```
+deno run -A https://raw.githubusercontent.com/powerpuffpenguin/envoy-xDS/main/init.ts -v 1.35
+```
+
+> Please modify 1.35 to a branch compatible with the envoy version you are using
