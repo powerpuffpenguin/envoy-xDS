@@ -101,6 +101,16 @@ export interface Route {
      * If set, this upstream is used for websocekt
      */
     websocketCluster?: string
+
+    /**
+     * RouteAction default xDS
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction}
+     */
+    init?: Record<string, any>
+    /**
+     * overlay RouteAction xDS
+     */
+    overlay?: Record<string, any>
 }
 export interface Host {
     /**
@@ -262,9 +272,13 @@ export class Router implements NameDS {
         }
     }
     private _routeWebsocket(opts: Route, match: Record<string, any>, websocket: boolean) {
+        const init = opts.init ?? {}
+        const overlay = opts.overlay ?? {}
         const route: Record<string, any> = {
+            ...init,
             cluster: websocket ? (opts.websocketCluster ?? opts.response) : opts.response,
             host_rewrite_literal: opts.rewriteHost,
+            ...overlay,
         }
         if (websocket) {
             arraySet(match,

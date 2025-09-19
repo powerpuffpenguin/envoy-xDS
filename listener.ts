@@ -148,7 +148,7 @@ export class Listener implements NameDS {
                         ],
                         "route_config": route ? await route.toJSON() : undefined,
                         "stat_prefix": opts.name,
-                        "strip_any_host_port": true
+                        // "strip_any_host_port": true,
                     }
                 }
             ]
