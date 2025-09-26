@@ -126,6 +126,14 @@ export interface Host {
      * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route}
      */
     routes?: Route[]
+    /**
+     * default xDS
+     */
+    init?: Record<string, any>
+    /**
+     * overlay xDS
+     */
+    overlay?: Record<string, any>
 }
 export interface RouterOptions {
     /**
@@ -173,10 +181,14 @@ export class Router implements NameDS {
             ...this.init,
             name: 'router_' + opts.name,
             virtual_hosts: opts?.hosts?.map((v) => {
+                const init = v.init ?? {}
+                const overlay = v.overlay ?? {}
                 return {
+                    ...init,
                     name: ['host', opts.name, v.name].join('_'),
                     domains: v.domains ?? ['*'],
                     routes: v.routes?.flatMap((v) => this._route(v)) ?? [],
+                    ...overlay,
                 }
             }),
             ...this.overlay,
